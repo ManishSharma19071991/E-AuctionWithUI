@@ -18,7 +18,7 @@ export const slideInAnimation =
           top: 0,
           left: 0,
           width: '100%'
-        })
+        }) 
       ], {optional: true}),
       query(':enter', [
         style({left: '-100%'})
