@@ -4,7 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProductInfo } from '../../shared/interfaces/productInfoparam';
 import { Title } from '@angular/platform-browser';
-
+import { NotificationService } from '../../notification.service';
 
 @Component({
   selector: 'app-create-product',
@@ -27,10 +27,10 @@ export class CreateComponent implements OnInit {
 
   lstSeller: any[] = [];
   lstProducts: any[] = [];
-  constructor(private productService: ProductService, private router: Router, private titleService: Title) {
+  constructor(private productService: ProductService, private router: Router, private titleService: Title,private notifyService : NotificationService) {
     titleService.setTitle('Create product');
   }
-
+  
   ngOnInit(): void {
     this.getAllproducts();
     this.getAllSeller();
@@ -77,6 +77,7 @@ export class CreateComponent implements OnInit {
     productparam.ShortDescription = this.sdescription.value;
     productparam.StartingPrice = this.startPrice.value;
     this.productService.addProduct(productparam).subscribe(data => {
+      this.showToasterSuccess("Product Added Successfully !.")
       this.sellerId = 0;
       this.selCategory = "";
       this.endDate.reset();
@@ -104,7 +105,11 @@ export class CreateComponent implements OnInit {
 
   deleteProducts(id: number) {
     this.productService.deleteProduct(id).subscribe(data => {
+      this.showToasterSuccess("Product Deleted Successfully !.")
       this.getAllproducts();
     });
   }
+  showToasterSuccess(message:string){
+    this.notifyService.showSuccess(message,"E-Auction")
+}
 }
