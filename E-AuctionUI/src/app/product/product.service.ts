@@ -1,20 +1,21 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Product} from '../shared/interfaces/product';
-import {environment} from '../../environments/environment';
-import {map} from 'rxjs/operators';
-import {Bid} from '../shared/interfaces/bid';
-import {Observable} from 'rxjs';
-import {Comment} from '../shared/interfaces/comment';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Product } from '../shared/interfaces/product';
+import { environment } from '../../environments/environment';
+import { catchError, map } from 'rxjs/operators';
+import { Bid } from '../shared/interfaces/bid';
+import { Observable, throwError } from 'rxjs';
+import { Comment } from '../shared/interfaces/comment';
 import { ProductInfo } from '../shared/interfaces/productInfoparam';
+import { error } from '@angular/compiler/src/util';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
   constructor(private httpClient: HttpClient) {
   }
 
   static addImagePath(product: Product): Product {
-    const {imagePath} = environment;
+    const { imagePath } = environment;
     product.image = `${imagePath}${product._id}.png`;
     return product;
   }
@@ -54,7 +55,7 @@ export class ProductService {
   }
 
   addBid(productId: string, priceValue): Observable<Bid> {
-    return this.httpClient.post<Bid>(`product/${productId}/bid`, {priceValue});
+    return this.httpClient.post<Bid>(`product/${productId}/bid`, { priceValue });
   }
 
   edit(productId: string, data): Observable<Product> {
@@ -62,11 +63,11 @@ export class ProductService {
   }
 
   comment(productId: string, comment: string): Observable<Comment> {
-    return this.httpClient.post<Comment>(`product/${productId}/comment`, {comment});
+    return this.httpClient.post<Comment>(`product/${productId}/comment`, { comment });
   }
 
   like(productId: string) {
-    return this.httpClient.post<any>(`product/${productId}/like`, {a: 1});
+    return this.httpClient.post<any>(`product/${productId}/like`, { a: 1 });
   }
 
   //New Method Added
@@ -82,7 +83,7 @@ export class ProductService {
   }
 
   getAllproducts(): Observable<any[]> {
-    console.log(this.httpClient);
+    //console.log(this.httpClient);
     return this.httpClient.get<any[]>(`getAllproducts`).pipe(map((products) => {
       return products;
     }));
@@ -92,4 +93,68 @@ export class ProductService {
     return this.httpClient.delete<Product>(`delete/${productId}`);
   }
 
+  GetAllBids(productId: number): Observable<any> {
+    return this.httpClient.get<any>(`show-bids/${productId}`).pipe(map((products) => {
+      return products;
+    }));
+  }
+
+  UpdateBids(productId: number, email: string, newAmt: number): Observable<any> {
+    var obj: any = {
+      ProductId: productId,
+      Email: email,
+      BidAmount: newAmt, };
+    return this.httpClient.post<any>(`update-bid`, JSON.stringify(obj)).pipe(
+      catchError(error => {
+        
+        alert(error.error.title);
+        let errorMsg: string;
+        if (error.error instanceof ErrorEvent) {
+          console.log(`Error: ${error.error.message}`);
+        } else {
+          console.log(this.getServerErrorMessage(error));
+        }
+
+        return throwError(errorMsg);
+      })
+    );
+  }
+
+
+  private getServerErrorMessage(error: HttpErrorResponse): string {
+    switch (error.status) {
+      case 404: {
+        return `Not Found: ${error.error.title}`;
+      }
+      case 403: {
+        return `Access Denied: ${error.error.title}`;
+      }
+      case 500: {
+        return `Internal Server Error: ${error.error.title}`;
+      }
+      default: {
+        return `Unknown Server Error: ${error.error.title}`;
+      }
+
+    }
+  }
+
+
+  placedBid(param: any): Observable<any> {
+   
+    return this.httpClient.post<any>(`place-bid`, JSON.stringify(param)).pipe(
+      catchError(error => {
+
+        alert(error.error.title);
+        let errorMsg: string;
+        if (error.error instanceof ErrorEvent) {
+          console.log(`Error: ${error.error.message}`);
+        } else {
+          console.log(this.getServerErrorMessage(error));
+        }
+
+        return throwError(errorMsg);
+      })
+    );
+  }
 }

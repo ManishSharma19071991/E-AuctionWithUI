@@ -9,7 +9,7 @@ import {CoreModule} from './core/core.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CustomTitleService} from './core/custom-title.service';
 import {DefaultInterceptor} from './core/default.interceptor';
-//import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import {DefaultInterceptor} from './core/default.interceptor';
     HttpClientModule,
     CoreModule,
     BrowserAnimationsModule,
-   // ToastrModule.forRoot(), // ToastrModule added
+    //ToastrModule.forRoot(), // ToastrModule added
   ],
   providers: [
     {

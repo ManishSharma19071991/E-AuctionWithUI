@@ -6,7 +6,7 @@ import {UserAgreementComponent} from './core/user-agreement/user-agreement.compo
 
 const routes: Routes = [
   {path: '', redirectTo: 'product/create', pathMatch: 'full'},
-  {path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+/*  {path: 'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},*/
   {path: 'product', loadChildren: () => import('./product/product.module').then(m => m.ProductModule)},
   {path: 'terms-of-service', component: TermsOfServiceComponent},
   {path: 'user-agreement', component: UserAgreementComponent},

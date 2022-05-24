@@ -62,7 +62,7 @@ namespace AspNetCoreMultipleProject.Handler
                 }
             }
 
-            result.buyerInfoVM = buyerInfoVM;
+            result.buyerInfoVM = buyerInfoVM.OrderByDescending(a=>a.BidAmount).ToList();
             result.productInfoVM = productInfoVM;
             return result;
         }

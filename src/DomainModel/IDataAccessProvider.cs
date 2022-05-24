@@ -27,5 +27,6 @@ namespace DomainModel
 
         Task<bool> ExistsProducts(long id);
         Task DeleteProduct(long productId);
+        Task CleanAllData();
     }
 }
