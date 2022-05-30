@@ -20,7 +20,7 @@ namespace DataAccessSqliteProvider
             _logger = loggerFactory.CreateLogger("DataAccessSqliteProvider");
         }
 
-      
+
 
         //E-Auction Methods Start here
 
@@ -80,12 +80,12 @@ namespace DataAccessSqliteProvider
         public async Task<ProductInfo> GetProductById(int productId)
         {
             return await _context.ProductInfo
-                               .FirstAsync(t => t.ProductId == productId && t.IsDeleted == false) ;
+                               .FirstAsync(t => t.ProductId == productId && t.IsDeleted == false);
         }
 
         public async Task<List<BuyerInfo>> GetAllBidsByProductId(int productId)
         {
-            return await _context.BuyerInfo.Where(a=>a.ProductId==productId)
+            return await _context.BuyerInfo.Where(a => a.ProductId == productId)
                               .ToListAsync();
         }
 
@@ -102,6 +102,51 @@ namespace DataAccessSqliteProvider
             var entity = _context.ProductInfo.First(t => t.ProductId == productId);
             _context.ProductInfo.Remove(entity);
             await _context.SaveChangesAsync();
+        }
+
+
+        public async Task CleanAllData()
+        {
+            //Delete All products
+            var product = await _context.ProductInfo
+                                 .ToListAsync();
+            if (product != null)
+            {
+                foreach (var item in product)
+                {
+                    var entity = _context.ProductInfo.First(t => t.ProductId == item.ProductId);
+                    _context.ProductInfo.Remove(entity);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            //Delete All Buyer
+            var buyer = await _context.BuyerInfo
+                                .ToListAsync();
+
+            if (buyer != null)
+            {
+                foreach (var item in buyer)
+                {
+                    var entity = _context.BuyerInfo.First(t => t.BuyerId == item.BuyerId);
+                    _context.BuyerInfo.Remove(entity);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            //Delete All Saler
+            var saler = await _context.SellerInfo
+                                .ToListAsync();
+
+            if (saler != null)
+            {
+                foreach (var item in saler)
+                {
+                    var entity = _context.SellerInfo.First(t => t.SellerId == item.SellerId);
+                    _context.SellerInfo.Remove(entity);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
     }
 }

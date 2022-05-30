@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <br />
+   
     <table class="table" style="overflow-y: auto !important;">
       <thead>
         <tr>
@@ -64,23 +64,25 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of lstProducts">
-          <td>{{item.productName}}</td>
-          <td>{{item.shortDescription}}</td>
-          <td>{{item.detailedDescription}}</td>
+          <td title="{{item.productName}}">{{item.productName | shorten:10}}</td>
+          <td title="{{item.shortDescription}}">{{item.shortDescription | shorten:20}}</td>
+          <td title="{{item.shortDescription}}">{{item.c | shorten:20}}</td>
           <td>{{item.category}}</td>
           <td>${{item.startingPrice}}</td>
           <td>{{item.createdDate  | date}}</td>
           <td>{{item.bidEndDate  | date}}</td>
-         
+
           <td >
             <button type="button" (click)="deleteProducts(item.productId);" class="btn btn-outline-info">Delete</button>
-            <button style="margin-left: 75px !important;margin-top:-59px; margin-bottom: 2px !important;" type="button" (click)="create();" class="btn btn-outline-info">View Bid</button>
+            <!--<button style="margin-left: 7px !important; margin-bottom: 2px !important;" type="button" (click)="create();" class="btn btn-outline-info">View Bid</button>-->
           </td>
         </tr>
-      
+
       </tbody>
     </table>
   </div>
 </section>
+
+
 
 

@@ -37,9 +37,18 @@ namespace AspNetCoreMultipleProject.Handler
                 ProductId = request.BuyerInfoVM.ProductId,
                 State = request.BuyerInfoVM.State,
             };
-
-
-
+            var data = await _dataAccessProvider.GetAllBuyer();
+            var dataProduct = await _dataAccessProvider.GetAllProducts();
+            var buyerAlreadyBid = data.Where(a => a.Email == request.BuyerInfoVM.Email).FirstOrDefault();
+            var products = dataProduct.Where(a => a.ProductId == request.BuyerInfoVM.ProductId).FirstOrDefault();
+            if (buyerAlreadyBid != null)
+            {
+                throw new Exception("Buyer is already bid on this product.");
+            }
+            if (products != null && products.BidEndDate<System.DateTime.Now)
+            {
+                throw new Exception("Bid end date is passed.");
+            }
             var der = await _dataAccessProvider.AddBuyer(buyerRecord);
 
             var result = new BuyerInfoVM

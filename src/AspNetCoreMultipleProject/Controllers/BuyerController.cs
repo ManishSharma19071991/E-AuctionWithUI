@@ -51,34 +51,38 @@ namespace AspNetCoreMultipleProject.Controllers
 
                 // var result = await _businessProvider.AddBuyer(value);
                 var result = await _mediator.Send(new AddBuyerCommand(value));
-                return Created("/api/DataEventRecord", result);
-            }
-            catch(Exception ex)
-            {
-                return Ok(ex);
-            }
-        }
-
-
-        [HttpPut("/update-bid/{productId}/{buyerEmailId}/{newBidAmt}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> UpdateBid(int productId, string buyerEmailId, double newBidAmt)
-        {
-            try
-            {
-                if (productId == 0)
-                {
-                    return BadRequest();
-                }
-                //  await _businessProvider.UpdateBid(productId, buyerEmailId, newBidAmt);
-                await _mediator.Send(new UpdateBidCommand(productId, buyerEmailId, newBidAmt));
                 return Ok();
             }
             catch (Exception ex)
             {
 
-                return NotFound(ex.Message);
+                return Problem(
+             detail: ex.StackTrace,
+             title: ex.Message);
+            }
+        }
+
+
+        [HttpPost("/update-bid")]
+     
+        public async Task<IActionResult> UpdateBid([FromBody] BuyerInfoVM value)
+        {
+            try
+            {
+                if (value.ProductId == 0)
+                {
+                    return BadRequest();
+                }
+                //  await _businessProvider.UpdateBid(productId, buyerEmailId, newBidAmt);
+                await _mediator.Send(new UpdateBidCommand(value.ProductId, value.Email, value.BidAmount));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(
+             detail: ex.StackTrace,
+             title: ex.Message);
             }
            
         }

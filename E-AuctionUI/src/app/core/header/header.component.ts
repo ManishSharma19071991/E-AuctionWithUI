@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output, EventEmitter, Inject} from '@angular/core';
-import {UserService} from '../../user/user.service';
+
 import {DOCUMENT} from '@angular/common';
 
 @Component({
@@ -12,15 +12,9 @@ export class HeaderComponent implements OnInit {
   @Output('logout') logoutEvent = new EventEmitter();
   @Output('themeChange') themeChangeEvent = new EventEmitter();
 
-  get isLoggedIn() {
-    return this.userService.isLogged;
-  }
+ 
 
-  get email() {
-    return this.userService.user.email;
-  }
-
-  constructor(private userService: UserService, @Inject(DOCUMENT) private _doc) {
+  constructor( @Inject(DOCUMENT) private _doc) {
   }
 
   ngOnInit(): void {

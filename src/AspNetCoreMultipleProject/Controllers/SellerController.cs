@@ -104,6 +104,19 @@ namespace AspNetCoreMultipleProject.Controllers
 
             return Ok();
         }
+
+
+        [HttpDelete("/CleanAllData")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Conflict)]
+        public async Task<IActionResult> CleanAllData()
+        {
+           
+            await _mediator.Send(new CleanAllDataCommand());
+           
+            return Ok();
+        }
         #endregion
 
 
